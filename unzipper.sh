@@ -11,32 +11,23 @@ do
 	case $FILETYPE in
 
 		application/x-bzip2)
-			echo "$FILE is bzipped. bunzipping."
+			echo "bunzipping."
 			bunzip2 $FILE
-			echo "here is everything in pwd."
-			ls
 			#bunzip outputs files without the .bz2 extention or with a .out ext
 			OUT="$FILE.out"
-			echo "$OUT should be file.out"
-			read pause
 			if [ -f $OUT ]
 			then
-				echo "there is a file.out"
 				FILE=$OUT
 			elif [ $FILE = *.bz2 ]
 			then
-				echo "there is no file.out"
 				BZ=$FILE
 				#stripping ".bz2" off of file
 				FILE=${BZ%.*2}
-				echo "$BZ is BZ"
-				echo "$FILE is FILE"		
 			fi
-			read pause
 			;;
 
 		application/x-tar)
-			echo "$FILE is a tar archive. extracting."
+			echo "extracting tar archive"
 			CONTENTS="$(tar tf $FILE)"
 			tar xvf $FILE
 			#contents must be only 1 file
@@ -44,17 +35,17 @@ do
 			;;
 
 		application/gzip)
-			echo "$FILE is gzipped. gunzipping"
+			echo "gunzipping"
 			gunzip -c $FILE > NEWFILE
 			mv NEWFILE CURRFILE
 			FILE=CURRFILE
 			;;
 
 		text/plain)
-			echo "filetype is - $FILETYPE"
 			LINECOUNT="$(wc -l "$FILE")"
 			if [ "$LINECOUNT" = "1 $FILE" ]
 			then
+				echo "$FILE is a normal text file"
 				cat $FILE
 				echo "password ^^^"
 				NOTDONE=false
